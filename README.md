@@ -1,3 +1,3 @@
-# bloc_todo_mk
+# Average Weight Tacker
 
-A new Flutter project.
+A simple app that tracks your weight and outputs the average from the last 7 and 30 days.
