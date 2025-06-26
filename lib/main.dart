@@ -1,43 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'data/models/isar_todo.dart';
-import 'data/models/sql_todo.dart';
-import 'data/repository/isar_todo_repo.dart';
-import 'data/repository/sql_todo_repo.dart';
-import 'domain/repository/todo_repo.dart';
-import 'presentation/todo_page.dart';
+import 'data/repository/app_settings_repo.dart';
+import 'data/repository/sql_weighin_repo.dart';
+import 'data/services/app_settings_service.dart';
+import 'data/services/sql_weighin_service.dart';
+import 'domain/settings_repo.dart';
+import 'domain/weighin_repo.dart';
+import 'presentation/home/home_view.dart';
+import 'presentation/settings/settings_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // get directory path for storing data
-  // final dir = await getApplicationDocumentsDirectory();
 
-  // open isar database
-  // final isar = await Isar.open([TodoIsarSchema], directory: dir.path);
-  await TodoSql.instance.initDb();
-
-  // initialize repo with isar database
-  // final isarTodoRepo = IsarTodoRepo(isar);
-  final sqlTodoRepo = SqlTodoRepo(TodoSql.instance);
+  // Initialize services
+  final weighinService = SqlWeighinRepo(db: SqlWeighin.instance);
+  final settingsService = AppSettingsRepo(SettingsService());
 
   runApp(MainApp(
-    todoRepo: sqlTodoRepo,
+    weighinRepo: weighinService,
+    settingsRepo: settingsService,
   ));
 }
 
 class MainApp extends StatelessWidget {
-  // database injection
-  final TodoRepo todoRepo;
+  const MainApp({
+    super.key,
+    required this.weighinRepo,
+    required this.settingsRepo,
+  });
 
-  const MainApp({super.key, required this.todoRepo});
+  final WeighinRepo weighinRepo;
+  final SettingsRepo settingsRepo;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: TodoPage(todoRepo: todoRepo),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<WeighinRepo>(
+          create: (context) => weighinRepo,
+        ),
+        RepositoryProvider<SettingsRepo>(
+          create: (context) => settingsRepo,
+        ),
+      ],
+      child: BlocProvider(
+        create: (context) => SettingsCubit(
+          context.read<SettingsRepo>(),
+        ),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData.dark(),
+          home: const HomeView(),
+        ),
+      ),
     );
   }
 }

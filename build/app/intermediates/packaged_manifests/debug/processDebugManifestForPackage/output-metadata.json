@@ -4,7 +4,7 @@
     "type": "PACKAGED_MANIFESTS",
     "kind": "Directory"
   },
-  "applicationId": "com.example.bloc_todo_mk",
+  "applicationId": "com.adrianmartinsen.bloc_weigh_in",
   "variantName": "debug",
   "elements": [
     {

@@ -1,6 +1,6 @@
 {
-    "name": "bloc_todo_mk",
-    "short_name": "bloc_todo_mk",
+    "name": "bloc_weigh_in",
+    "short_name": "bloc_weigh_in",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

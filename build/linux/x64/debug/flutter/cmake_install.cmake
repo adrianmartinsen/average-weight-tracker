@@ -1,8 +1,8 @@
-# Install script for directory: /home/adrian/Code/Flutter/bloc_todo_mk/linux/flutter
+# Install script for directory: /home/adrian/Code/Flutter/bloc_weigh_in/linux/flutter
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/adrian/Code/Flutter/bloc_todo_mk/build/linux/x64/debug/bundle")
+  set(CMAKE_INSTALL_PREFIX "/home/adrian/Code/Flutter/bloc_weigh_in/build/linux/x64/debug/bundle")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.bloc_weigh_in.app-mergeReleaseResources-39:/values-watch-v20/values-watch-v20.xml",
+            "map": [
+                {
+                    "source": "/home/adrian/.gradle/caches/8.10.2/transforms/2c06b5fb898a4d38e0ca99df58b3bc73/transformed/appcompat-1.1.0/res/values-watch-v20/values-watch-v20.xml",
+                    "from": {
+                        "startLines": "2,5,8",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,214,385",
+                        "endLines": "4,7,10",
+                        "endColumns": "12,12,12",
+                        "endOffsets": "209,380,553"
+                    }
+                }
+            ]
+        }
+    ]
+}
