@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 import '../../domain/weighin_model.dart';
 import '../settings/settings_cubit.dart';
 import 'weighin_cubit.dart';
 import 'weighin_state.dart';
+import 'widgets/weighin_tile.dart';
 
 class WeighinView extends StatelessWidget {
   const WeighinView({super.key});
@@ -39,22 +39,13 @@ class WeighinView extends StatelessWidget {
               itemCount: weighinList.length,
               itemBuilder: (context, index) {
                 final weighin = weighinList[index];
-                final formattedDate = DateFormat.yMMMd().format(weighin.date);
                 return BlocBuilder<SettingsCubit, String>(
                   builder: (context, weightUnit) {
-                    return ListTile(
-                      leading: Text(formattedDate),
-                      title: Text(
-                        "${weighin.weight} $weightUnit",
-                        textAlign: TextAlign.center,
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          context.read<WeighinCubit>().deleteWeighin(weighin);
-                        },
-                        tooltip: 'Delete',
-                      ),
+                    return WeighinTile(
+                      date: weighin.date,
+                      weight: weighin.weight,
+                      weightType: weightUnit,
+                      weighin: weighin,
                     );
                   },
                 );
