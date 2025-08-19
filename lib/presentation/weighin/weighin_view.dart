@@ -5,7 +5,7 @@ import '../../domain/weighin_model.dart';
 import '../settings/settings_cubit.dart';
 import 'weighin_cubit.dart';
 import 'weighin_state.dart';
-import 'widgets/weighin_tile.dart';
+import 'weighin_tile.dart';
 
 class WeighinView extends StatelessWidget {
   const WeighinView({super.key});

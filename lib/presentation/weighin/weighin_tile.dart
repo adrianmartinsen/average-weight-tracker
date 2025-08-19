@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../domain/weighin_model.dart';
-import '../weighin_cubit.dart';
+import '../../domain/weighin_model.dart';
+import 'weighin_cubit.dart';
 
 class WeighinTile extends StatelessWidget {
   final DateTime date;
