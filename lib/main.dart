@@ -40,13 +40,14 @@ class MainApp extends StatelessWidget {
         RepositoryProvider<WeighinRepo>(
           create: (context) => weighinRepo,
         ),
-        RepositoryProvider<SettingsRepo>(
-          create: (context) => settingsRepo,
-        ),
+        // RepositoryProvider<SettingsRepo>(
+        //   create: (context) => settingsRepo,
+        // ),
       ],
       child: BlocProvider(
         create: (context) => SettingsCubit(
-          context.read<SettingsRepo>(),
+          settingsRepo,
+          // context.read<SettingsRepo>(),
         ),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
