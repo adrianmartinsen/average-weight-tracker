@@ -7,7 +7,9 @@ import '../../domain/settings_repo.dart';
 const List<String> weightUnits = ['kg', 'lbs'];
 
 class SettingsCubit extends Cubit<String> {
-  SettingsCubit(this._settingsRepo) : super('') {
+  SettingsCubit({required SettingsRepo settingsRepo})
+      : _settingsRepo = settingsRepo,
+        super('') {
     _subscription = _settingsRepo.unitTypeStream().listen((unitType) {
       emit(unitType);
     });

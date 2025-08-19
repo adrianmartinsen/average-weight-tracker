@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'data/repository/app_settings_repo.dart';
+import 'data/repository/app_card_config_repo.dart';
 import 'data/repository/sql_weighin_repo.dart';
 import 'data/services/app_settings_service.dart';
 import 'data/services/sql_weighin_service.dart';
+import 'data/services/weight_card_service.dart';
+import 'domain/card_config_repo.dart';
 import 'domain/settings_repo.dart';
 import 'domain/weighin_repo.dart';
 import 'presentation/home/home_view.dart';
@@ -16,10 +19,12 @@ void main() async {
   // Initialize services
   final weighinService = SqlWeighinRepo(db: SqlWeighin.instance);
   final settingsService = AppSettingsRepo(SettingsService());
+  final cardConfigRepo = AppCardConfigRepo(WeightCardService());
 
   runApp(MainApp(
     weighinRepo: weighinService,
     settingsRepo: settingsService,
+    cardConfigRepo: cardConfigRepo,
   ));
 }
 
@@ -28,10 +33,12 @@ class MainApp extends StatelessWidget {
     super.key,
     required this.weighinRepo,
     required this.settingsRepo,
+    required this.cardConfigRepo,
   });
 
   final WeighinRepo weighinRepo;
   final SettingsRepo settingsRepo;
+  final CardConfigRepo cardConfigRepo;
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +47,13 @@ class MainApp extends StatelessWidget {
         RepositoryProvider<WeighinRepo>(
           create: (context) => weighinRepo,
         ),
-        // RepositoryProvider<SettingsRepo>(
-        //   create: (context) => settingsRepo,
-        // ),
+        RepositoryProvider<CardConfigRepo>(
+          create: (context) => cardConfigRepo,
+        ),
       ],
       child: BlocProvider(
         create: (context) => SettingsCubit(
-          settingsRepo,
-          // context.read<SettingsRepo>(),
+          settingsRepo: settingsRepo,
         ),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

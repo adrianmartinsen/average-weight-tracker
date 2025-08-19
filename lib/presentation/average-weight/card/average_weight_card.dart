@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/weighin_model.dart';
-import 'average_weight_cubit.dart';
+import '../../../domain/weighin_model.dart';
+import 'average_weight_card_cubit.dart';
 
 class AverageWeightCard extends StatelessWidget {
   final String period; // 'week' or 'month'
@@ -18,12 +18,12 @@ class AverageWeightCard extends StatelessWidget {
     late String title;
     late List<Weighin> filteredWeighins;
 
-    return BlocBuilder<AverageWeightCubit, List<Weighin>>(
+    return BlocBuilder<AverageWeightCardCubit, List<Weighin>>(
         builder: (context, weighins) {
       final lastWeekWeighins =
-          context.read<AverageWeightCubit>().getLastWeekWeighins(weighins);
+          context.read<AverageWeightCardCubit>().getLastWeekWeighins(weighins);
       final lastMonthWeighins =
-          context.read<AverageWeightCubit>().getLastMonthWeighins(weighins);
+          context.read<AverageWeightCardCubit>().getLastMonthWeighins(weighins);
 
       // When we have more than two cards consider a switch statement instead
       if (period == 'week') {

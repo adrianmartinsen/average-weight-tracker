@@ -2,14 +2,15 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/weighin_model.dart';
-import '../../domain/weighin_repo.dart';
+import '../../../domain/weighin_model.dart';
+import '../../../domain/weighin_repo.dart';
 
-class AverageWeightCubit extends Cubit<List<Weighin>> {
+class AverageWeightCardCubit extends Cubit<List<Weighin>> {
   // Constructor initializes the cubit with an empty list
-  AverageWeightCubit({
-    required this.weighinRepo,
-  }) : super([]) {
+  AverageWeightCardCubit({
+    required WeighinRepo weighinRepo,
+  })  : _weighinRepo = weighinRepo,
+        super([]) {
     // Subscribe to the weighins stream
     _weighinsSubscription = weighinRepo.getWeighinsStream().listen((weighins) {
       emit(weighins);
@@ -19,12 +20,12 @@ class AverageWeightCubit extends Cubit<List<Weighin>> {
   }
 
   // Repository to fetch weighin data
-  final WeighinRepo weighinRepo;
+  final WeighinRepo _weighinRepo;
   late final StreamSubscription<List<Weighin>> _weighinsSubscription;
 
   // Method to load weighins from the repository
   void loadWeighins() async {
-    final weighins = await weighinRepo.getWeighins();
+    final weighins = await _weighinRepo.getWeighins();
     emit(weighins);
   }
 

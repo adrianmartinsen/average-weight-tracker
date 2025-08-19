@@ -8,10 +8,11 @@ import 'weighin_state.dart';
 class WeighinCubit extends Cubit<WeighinState> {
   // Constructor initializes the cubit with an initial state
   WeighinCubit({
-    required this.weighinRepo,
-  }) : super(WeighinInitial()) {
+    required WeighinRepo weighinRepo,
+  })  : _weighinRepo = weighinRepo,
+        super(WeighinInitial()) {
     // Subscribe to the weighins stream
-    _weighinsSubscription = weighinRepo.getWeighinsStream().listen((weighins) {
+    _weighinsSubscription = _weighinRepo.getWeighinsStream().listen((weighins) {
       emit(WeighinLoaded(weighins: weighins));
     });
     // Initial load
@@ -19,14 +20,14 @@ class WeighinCubit extends Cubit<WeighinState> {
   }
 
   // Repository to fetch weighin data
-  final WeighinRepo weighinRepo;
+  final WeighinRepo _weighinRepo;
   late final StreamSubscription<List<Weighin>> _weighinsSubscription;
 
   // Method to load weighins from the repository
   void loadWeighins() async {
     emit(WeighinLoading());
     try {
-      final weighins = await weighinRepo.getWeighins();
+      final weighins = await _weighinRepo.getWeighins();
       emit(WeighinLoaded(weighins: weighins));
     } catch (e) {
       emit(WeighinError(e.toString()));
@@ -35,7 +36,7 @@ class WeighinCubit extends Cubit<WeighinState> {
 
   Future<void> addWeighin(double weight, DateTime date) async {
     try {
-      await weighinRepo.addWeighin(weight, date);
+      await _weighinRepo.addWeighin(weight, date);
     } catch (e) {
       emit(WeighinError(e.toString()));
     }
@@ -43,7 +44,7 @@ class WeighinCubit extends Cubit<WeighinState> {
 
   Future<void> updateWeighin(Weighin weighin) async {
     try {
-      await weighinRepo.updateWeighin(weighin);
+      await _weighinRepo.updateWeighin(weighin);
     } catch (e) {
       emit(WeighinError(e.toString()));
     }
@@ -51,7 +52,7 @@ class WeighinCubit extends Cubit<WeighinState> {
 
   Future<void> deleteWeighin(Weighin weighin) async {
     try {
-      await weighinRepo.deleteWeighin(weighin);
+      await _weighinRepo.deleteWeighin(weighin);
     } catch (e) {
       emit(WeighinError(e.toString()));
     }
