@@ -26,22 +26,6 @@ class AverageWeightCard extends StatelessWidget {
 
     return BlocBuilder<AverageWeightCardCubit, List<Weighin>>(
         builder: (context, weighins) {
-      // final lastWeekWeighins =
-      //     context.read<AverageWeightCardCubit>().getLastWeekWeighins(weighins);
-      // final lastMonthWeighins =
-      //     context.read<AverageWeightCardCubit>().getLastMonthWeighins(weighins);
-
-      // When we have more than two cards consider a switch statement instead
-      // if (period == 'week') {
-      //   title = 'Average Weight Last 7 Days';
-      //   filteredWeighins = lastWeekWeighins;
-      // }
-
-      // if (period == 'month') {
-      //   title = 'Average Weight Last 30 Days';
-      //   filteredWeighins = lastMonthWeighins;
-      // }
-
       switch (period) {
         case 'week':
           title = 'Average Weight Last 7 Days';

@@ -35,9 +35,27 @@ class AverageWeightCardCubit extends Cubit<List<Weighin>> {
         .toList();
   }
 
+  List<Weighin> getLastTwoWeeksWeighins(List<Weighin> weighins) {
+    return weighins
+        .where((weighin) => isDateInPeriod(weighin.date, 14))
+        .toList();
+  }
+
   List<Weighin> getLastMonthWeighins(List<Weighin> weighins) {
     return weighins
         .where((weighin) => isDateInPeriod(weighin.date, 30))
+        .toList();
+  }
+
+  List<Weighin> getLastTwoMonthsWeighins(List<Weighin> weighins) {
+    return weighins
+        .where((weighin) => isDateInPeriod(weighin.date, 60))
+        .toList();
+  }
+
+  List<Weighin> getLastSixMonthsWeighins(List<Weighin> weighins) {
+    return weighins
+        .where((weighin) => isDateInPeriod(weighin.date, 180))
         .toList();
   }
 
@@ -46,50 +64,6 @@ class AverageWeightCardCubit extends Cubit<List<Weighin>> {
     _weighinsSubscription.cancel();
     return super.close();
   }
-}
-
-bool isDateInLastWeek(DateTime dateToCheck) {
-  // Get current date without time component
-  final now = DateTime.now();
-  final today = DateTime(now.year, now.month, now.day);
-
-  // Calculate date 7 days ago
-  final sevenDaysAgo = today.subtract(const Duration(days: 6));
-
-  // Get date to check without time component
-  final dateWithoutTime = DateTime(
-    dateToCheck.year,
-    dateToCheck.month,
-    dateToCheck.day,
-  );
-
-  // Check if date falls within range (inclusive)
-  return (dateWithoutTime.isAtSameMomentAs(today) ||
-          dateWithoutTime.isBefore(today)) &&
-      (dateWithoutTime.isAtSameMomentAs(sevenDaysAgo) ||
-          dateWithoutTime.isAfter(sevenDaysAgo));
-}
-
-bool isDateInLastMonth(DateTime dateToCheck) {
-  // Get current date without time component
-  final now = DateTime.now();
-  final today = DateTime(now.year, now.month, now.day);
-
-  // Calculate date 30 days ago
-  final thirtyDaysAgo = today.subtract(const Duration(days: 29));
-
-  // Get date to check without time component
-  final dateWithoutTime = DateTime(
-    dateToCheck.year,
-    dateToCheck.month,
-    dateToCheck.day,
-  );
-
-  // Check if date falls within range (inclusive)
-  return (dateWithoutTime.isAtSameMomentAs(today) ||
-          dateWithoutTime.isBefore(today)) &&
-      (dateWithoutTime.isAtSameMomentAs(thirtyDaysAgo) ||
-          dateWithoutTime.isAfter(thirtyDaysAgo));
 }
 
 bool isDateInPeriod(DateTime dateToCheck, int days) {
