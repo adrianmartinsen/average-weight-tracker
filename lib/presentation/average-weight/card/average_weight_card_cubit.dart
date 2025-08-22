@@ -30,12 +30,14 @@ class AverageWeightCardCubit extends Cubit<List<Weighin>> {
   }
 
   List<Weighin> getLastWeekWeighins(List<Weighin> weighins) {
-    return weighins.where((weighin) => isDateInLastWeek(weighin.date)).toList();
+    return weighins
+        .where((weighin) => isDateInPeriod(weighin.date, 7))
+        .toList();
   }
 
   List<Weighin> getLastMonthWeighins(List<Weighin> weighins) {
     return weighins
-        .where((weighin) => isDateInLastMonth(weighin.date))
+        .where((weighin) => isDateInPeriod(weighin.date, 30))
         .toList();
   }
 
@@ -88,4 +90,26 @@ bool isDateInLastMonth(DateTime dateToCheck) {
           dateWithoutTime.isBefore(today)) &&
       (dateWithoutTime.isAtSameMomentAs(thirtyDaysAgo) ||
           dateWithoutTime.isAfter(thirtyDaysAgo));
+}
+
+bool isDateInPeriod(DateTime dateToCheck, int days) {
+  // Get current date without time component
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+
+  // Calculate date `days` ago
+  final startDate = today.subtract(Duration(days: days - 1));
+
+  // Get date to check without time component
+  final dateWithoutTime = DateTime(
+    dateToCheck.year,
+    dateToCheck.month,
+    dateToCheck.day,
+  );
+
+  // Check if date falls within range (inclusive)
+  return (dateWithoutTime.isAtSameMomentAs(today) ||
+          dateWithoutTime.isBefore(today)) &&
+      (dateWithoutTime.isAtSameMomentAs(startDate) ||
+          dateWithoutTime.isAfter(startDate));
 }
