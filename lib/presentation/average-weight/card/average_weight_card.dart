@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/weighin_model.dart';
+import '../view/average_weight_view_cubit.dart';
+import '../widgets/add_or_edit_card_dialog.dart';
 import 'average_weight_card_cubit.dart';
 
 class AverageWeightCard extends StatelessWidget {
@@ -13,6 +15,10 @@ class AverageWeightCard extends StatelessWidget {
     required this.weightType,
   });
 
+  void _editCard(BuildContext context) {
+    showAddOrEditCardDialog(context, period: period);
+  }
+
   @override
   Widget build(BuildContext context) {
     late String title;
@@ -20,20 +26,53 @@ class AverageWeightCard extends StatelessWidget {
 
     return BlocBuilder<AverageWeightCardCubit, List<Weighin>>(
         builder: (context, weighins) {
-      final lastWeekWeighins =
-          context.read<AverageWeightCardCubit>().getLastWeekWeighins(weighins);
-      final lastMonthWeighins =
-          context.read<AverageWeightCardCubit>().getLastMonthWeighins(weighins);
+      // final lastWeekWeighins =
+      //     context.read<AverageWeightCardCubit>().getLastWeekWeighins(weighins);
+      // final lastMonthWeighins =
+      //     context.read<AverageWeightCardCubit>().getLastMonthWeighins(weighins);
 
       // When we have more than two cards consider a switch statement instead
-      if (period == 'week') {
-        title = 'Average Weight Last 7 Days';
-        filteredWeighins = lastWeekWeighins;
-      }
+      // if (period == 'week') {
+      //   title = 'Average Weight Last 7 Days';
+      //   filteredWeighins = lastWeekWeighins;
+      // }
 
-      if (period == 'month') {
-        title = 'Average Weight Last 30 Days';
-        filteredWeighins = lastMonthWeighins;
+      // if (period == 'month') {
+      //   title = 'Average Weight Last 30 Days';
+      //   filteredWeighins = lastMonthWeighins;
+      // }
+
+      switch (period) {
+        case 'week':
+          title = 'Average Weight Last 7 Days';
+          filteredWeighins = context
+              .read<AverageWeightCardCubit>()
+              .getLastWeekWeighins(weighins);
+          break;
+        case 'twoweeks':
+          title = 'Average Weight Last 14 Days';
+          filteredWeighins = context
+              .read<AverageWeightCardCubit>()
+              .getLastTwoWeeksWeighins(weighins);
+          break;
+        case 'month':
+          title = 'Average Weight Last 30 Days';
+          filteredWeighins = context
+              .read<AverageWeightCardCubit>()
+              .getLastMonthWeighins(weighins);
+          break;
+        case 'twomonths':
+          title = 'Average Weight Last 60 Days';
+          filteredWeighins = context
+              .read<AverageWeightCardCubit>()
+              .getLastTwoMonthsWeighins(weighins);
+          break;
+        case 'sixmonths':
+          title = 'Average Weight Last 180 Days';
+          filteredWeighins = context
+              .read<AverageWeightCardCubit>()
+              .getLastSixMonthsWeighins(weighins);
+          break;
       }
 
       return Padding(
@@ -68,14 +107,24 @@ class AverageWeightCard extends StatelessWidget {
                   right: 3,
                   child: PopupMenuButton<String>(
                     color: Colors.grey[700],
+                    onSelected: (value) {
+                      if (value == 'edit') {
+                        _editCard(context);
+                      }
+                    },
                     itemBuilder: (context) => [
                       const PopupMenuItem<String>(
                         value: 'edit',
                         child: Text('Edit'),
                       ),
-                      const PopupMenuItem<String>(
+                      PopupMenuItem<String>(
                         value: 'delete',
-                        child: Text('Delete'),
+                        child: const Text('Delete'),
+                        onTap: () {
+                          context
+                              .read<AverageWeightViewCubit>()
+                              .removeCard(period);
+                        },
                       ),
                     ],
                     child: const Icon(Icons.more_vert, size: 20),
