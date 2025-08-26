@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../domain/settings_model.dart';
 import 'settings_cubit.dart';
 
 class SettingsView extends StatelessWidget {
@@ -7,8 +8,8 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SettingsCubit, String>(
-      builder: (context, state) {
+    return BlocBuilder<SettingsCubit, Settings>(
+      builder: (context, settings) {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Settings'),
@@ -30,7 +31,7 @@ class SettingsView extends StatelessWidget {
                     RadioListTile<String>(
                       title: const Text('Kilograms (kg)'),
                       value: 'kg',
-                      groupValue: state,
+                      groupValue: settings.weightUnit,
                       onChanged: (String? value) {
                         if (value != null) {
                           context.read<SettingsCubit>().setWeightUnit(value);
@@ -40,7 +41,7 @@ class SettingsView extends StatelessWidget {
                     RadioListTile<String>(
                       title: const Text('Pounds (lbs)'),
                       value: 'lbs',
-                      groupValue: state,
+                      groupValue: settings.weightUnit,
                       onChanged: (String? value) {
                         if (value != null) {
                           context.read<SettingsCubit>().setWeightUnit(value);

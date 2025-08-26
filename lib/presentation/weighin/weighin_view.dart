@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../domain/settings_model.dart';
 import '../../domain/weighin_model.dart';
 import '../settings/settings_cubit.dart';
 import 'weighin_cubit.dart';
@@ -39,12 +40,12 @@ class WeighinView extends StatelessWidget {
               itemCount: weighinList.length,
               itemBuilder: (context, index) {
                 final weighin = weighinList[index];
-                return BlocBuilder<SettingsCubit, String>(
-                  builder: (context, weightUnit) {
+                return BlocBuilder<SettingsCubit, Settings>(
+                  builder: (context, settings) {
                     return WeighinTile(
                       date: weighin.date,
                       weight: weighin.weight,
-                      weightType: weightUnit,
+                      weightType: settings.weightUnit,
                       weighin: weighin,
                     );
                   },

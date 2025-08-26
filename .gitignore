@@ -13,3 +13,4 @@ pubspec.lock
 # Misc
 *.log
 todo.md
+*copy.dart
