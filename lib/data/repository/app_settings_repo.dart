@@ -1,26 +1,61 @@
 import 'dart:async';
 
+import '../../domain/settings_model.dart';
 import '../../domain/settings_repo.dart';
-import '../services/app_settings_service.dart';
+import '../services/notification_service.dart';
+import '../services/reminder_settings_service.dart';
+import '../services/weight_settings_service.dart';
 
 class AppSettingsRepo implements SettingsRepo {
-  AppSettingsRepo(this._settingsService);
+  AppSettingsRepo({
+    required this.weightSettingsService,
+    required this.reminderSettingsService,
+    required this.notificationService,
+  });
 
-  final SettingsService _settingsService;
+  final WeightSettingsService weightSettingsService;
+  final ReminderSettingsService reminderSettingsService;
+  final NotificationService notificationService;
+
+  final _settingsController = StreamController<Settings>.broadcast();
+  late Settings? _currentSettings;
 
   @override
-  Future<String> getWeightUnit() async {
-    return await _settingsService.getWeightUnit();
+  Stream<Settings> get settingsStream => _settingsController.stream;
+
+  @override
+  Future<Settings> getSettings() async {
+    final weightUnit = await weightSettingsService.getWeightUnit();
+    final remindersEnabled =
+        await reminderSettingsService.getRemindersEnabled();
+    // final reminderTime = await reminderSettingsService.getReminderTime();
+
+    final settings = Settings(
+      weightUnit: weightUnit,
+      remindersEnabled: remindersEnabled,
+      // reminderTime: reminderTime,
+    );
+    _currentSettings = settings;
+    return settings;
   }
 
   @override
-  Future<void> setWeightUnit(String unitType) async {
-    await _settingsService.setWeightUnit(unitType);
-    _weightUnitController.add(unitType);
+  Future<void> saveSettings(Settings settings) async {
+    // Persist each setting using its dedicated service
+    await weightSettingsService.setWeightUnit(settings.weightUnit);
+    await reminderSettingsService
+        .setRemindersEnabled(settings.remindersEnabled);
+    // await reminderSettingsService.setReminderTime(settings.reminderTime);
+
+    // Handle notification logic
+    // if (settings.remindersEnabled) {
+    //   await notificationService.scheduleDailyWeighInReminder(settings.reminderTime);
+    // } else {
+    //   await notificationService.cancelAllNotifications();
+    // }
+
+    // Update the current settings cache and notify listeners
+    _currentSettings = settings;
+    _settingsController.add(settings);
   }
-
-  final _weightUnitController = StreamController<String>.broadcast();
-
-  @override
-  Stream<String> unitTypeStream() => _weightUnitController.stream;
 }

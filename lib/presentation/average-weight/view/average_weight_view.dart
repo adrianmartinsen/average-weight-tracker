@@ -2,6 +2,7 @@ import 'package:bloc_weigh_in/presentation/average-weight/view/average_weight_vi
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/settings_model.dart';
 import '../../settings/settings_cubit.dart';
 import '../card/average_weight_card.dart';
 import '../widgets/add_or_edit_card_dialog.dart';
@@ -46,9 +47,9 @@ class AverageWeightView extends StatelessWidget {
             ),
           );
         }
-        return BlocBuilder<SettingsCubit, String>(
-          builder: (context, weightUnit) {
-            String weightType = weightUnit;
+        return BlocBuilder<SettingsCubit, Settings>(
+          builder: (context, settings) {
+            String weightType = settings.weightUnit;
 
             return Center(
               child: ListView.builder(

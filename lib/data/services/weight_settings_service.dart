@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsService {
+class WeightSettingsService {
   static const String _weightUnitKey = 'weight_unit';
 
   Future<void> setWeightUnit(String unitType) async {

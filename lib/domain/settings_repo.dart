@@ -1,7 +1,15 @@
+import 'dart:async';
+
+import 'settings_model.dart';
+
 abstract class SettingsRepo {
-  Future<String> getWeightUnit();
+  // Gets the full settings object.
+  Future<Settings> getSettings();
 
-  Future<void> setWeightUnit(String unit);
+  // Saves the full settings object.
+  // The implementation will delegate to the correct services.
+  Future<void> saveSettings(Settings settings);
 
-  Stream<String> unitTypeStream();
+  // A stream that emits the new Settings object whenever they change.
+  Stream<Settings> get settingsStream;
 }

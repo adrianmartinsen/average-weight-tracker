@@ -2,34 +2,48 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../domain/settings_model.dart';
 import '../../domain/settings_repo.dart';
 
 const List<String> weightUnits = ['kg', 'lbs'];
 
-class SettingsCubit extends Cubit<String> {
+class SettingsCubit extends Cubit<Settings> {
   SettingsCubit({required SettingsRepo settingsRepo})
       : _settingsRepo = settingsRepo,
-        super('') {
-    _subscription = _settingsRepo.unitTypeStream().listen((unitType) {
-      emit(unitType);
+        super(
+          const Settings(
+            weightUnit: 'kg',
+            remindersEnabled: false,
+          ),
+        ) {
+    _subscription = _settingsRepo.settingsStream.listen((settings) {
+      emit(settings);
     });
     // Initial load
-    loadWeightUnit();
+    loadSettings();
   }
 
   final SettingsRepo _settingsRepo;
-  late final StreamSubscription<String> _subscription;
+  late final StreamSubscription<Settings> _subscription;
 
-  Future<void> loadWeightUnit() async {
-    final weightUnit = await _settingsRepo.getWeightUnit();
-    emit(weightUnit);
+  Future<void> loadSettings() async {
+    final settings = await _settingsRepo.getSettings();
+    emit(settings);
   }
 
   Future<void> setWeightUnit(String unitType) async {
     if (weightUnits.contains(unitType)) {
-      await _settingsRepo.setWeightUnit(unitType);
-      emit(unitType);
+      final newSettings = state.copyWith(weightUnit: unitType);
+      await _settingsRepo.saveSettings(newSettings);
     }
+  }
+
+  Future<void> setReminders({required bool enabled, String? time}) async {
+    final newSettings = state.copyWith(
+      remindersEnabled: enabled,
+      // reminderTime: time ?? state.reminderTime, // Only update time if provided
+    );
+    await _settingsRepo.saveSettings(newSettings);
   }
 
   @override
