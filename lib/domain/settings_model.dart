@@ -4,12 +4,12 @@ import 'package:flutter/foundation.dart';
 class Settings {
   final String weightUnit;
   final bool remindersEnabled;
-  // final String reminderTime; // Stored in 'HH:mm' format, e.g., "20:30"
+  final String reminderTime; // Stored in 'HH:mm' format, e.g., "20:30"
 
   const Settings({
     required this.weightUnit,
     required this.remindersEnabled,
-    // required this.reminderTime,
+    required this.reminderTime,
   });
 
   // Allows creating a new instance of Settings with updated values
@@ -21,7 +21,7 @@ class Settings {
     return Settings(
       weightUnit: weightUnit ?? this.weightUnit,
       remindersEnabled: remindersEnabled ?? this.remindersEnabled,
-      // reminderTime: reminderTime ?? this.reminderTime,
+      reminderTime: reminderTime ?? this.reminderTime,
     );
   }
 }

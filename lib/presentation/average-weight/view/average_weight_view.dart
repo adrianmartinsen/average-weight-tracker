@@ -63,7 +63,7 @@ class AverageWeightView extends StatelessWidget {
                     );
                   } else {
                     return Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 40),
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 40),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12.0),

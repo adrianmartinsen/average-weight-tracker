@@ -14,6 +14,7 @@ class SettingsCubit extends Cubit<Settings> {
           const Settings(
             weightUnit: 'kg',
             remindersEnabled: false,
+            reminderTime: '20:00',
           ),
         ) {
     _subscription = _settingsRepo.settingsStream.listen((settings) {
@@ -41,9 +42,13 @@ class SettingsCubit extends Cubit<Settings> {
   Future<void> setReminders({required bool enabled, String? time}) async {
     final newSettings = state.copyWith(
       remindersEnabled: enabled,
-      // reminderTime: time ?? state.reminderTime, // Only update time if provided
+      reminderTime: time ?? state.reminderTime, // Only update time if provided
     );
     await _settingsRepo.saveSettings(newSettings);
+  }
+
+  Future<void> showTestNotification() async {
+    await _settingsRepo.showTestNotification();
   }
 
   @override

@@ -12,4 +12,8 @@ abstract class SettingsRepo {
 
   // A stream that emits the new Settings object whenever they change.
   Stream<Settings> get settingsStream;
+
+
+  // Shows a test notification.
+  Future<void> showTestNotification();
 }

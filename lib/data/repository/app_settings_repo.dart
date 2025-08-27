@@ -18,7 +18,6 @@ class AppSettingsRepo implements SettingsRepo {
   final NotificationService notificationService;
 
   final _settingsController = StreamController<Settings>.broadcast();
-  late Settings? _currentSettings;
 
   @override
   Stream<Settings> get settingsStream => _settingsController.stream;
@@ -28,14 +27,14 @@ class AppSettingsRepo implements SettingsRepo {
     final weightUnit = await weightSettingsService.getWeightUnit();
     final remindersEnabled =
         await reminderSettingsService.getRemindersEnabled();
-    // final reminderTime = await reminderSettingsService.getReminderTime();
+    final reminderTime = await reminderSettingsService.getReminderTime();
 
     final settings = Settings(
       weightUnit: weightUnit,
       remindersEnabled: remindersEnabled,
-      // reminderTime: reminderTime,
+      reminderTime: reminderTime,
     );
-    _currentSettings = settings;
+    _settingsController.add(settings);
     return settings;
   }
 
@@ -45,17 +44,25 @@ class AppSettingsRepo implements SettingsRepo {
     await weightSettingsService.setWeightUnit(settings.weightUnit);
     await reminderSettingsService
         .setRemindersEnabled(settings.remindersEnabled);
-    // await reminderSettingsService.setReminderTime(settings.reminderTime);
+    await reminderSettingsService.setReminderTime(settings.reminderTime);
 
     // Handle notification logic
-    // if (settings.remindersEnabled) {
-    //   await notificationService.scheduleDailyWeighInReminder(settings.reminderTime);
-    // } else {
-    //   await notificationService.cancelAllNotifications();
-    // }
+    if (settings.remindersEnabled) {
+      await notificationService.scheduleDailyWeighInReminder(settings.reminderTime);
+    } else {
+      await notificationService.cancelAllNotifications();
+    }
 
     // Update the current settings cache and notify listeners
-    _currentSettings = settings;
     _settingsController.add(settings);
+  }
+
+  @override
+  Future<void> showTestNotification() async {
+    return notificationService.showNotification(
+      id: 1,
+      title: 'Test Notification',
+      body: 'This is a test notification.',
+    );
   }
 }
