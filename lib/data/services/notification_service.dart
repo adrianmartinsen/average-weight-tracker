@@ -9,7 +9,9 @@ class NotificationService {
   bool _isInitialized = false;
   bool get isInitialized => _isInitialized;
 
-  Future<void> init() async {
+  Future<void> init({
+    Function(String? payload)? onNotificationTapped,
+  }) async {
     if (_isInitialized) return;
 
     _configureLocalTimeZone();
@@ -24,7 +26,12 @@ class NotificationService {
       iOS: initSettingsIOS,
     );
 
-    await _notifications.initialize(initSettings);
+    await _notifications.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: (response) {
+        onNotificationTapped?.call(response.payload);
+      },
+    );
     _isInitialized = true;
   }
 
@@ -64,6 +71,7 @@ class NotificationService {
       title,
       body,
       _instantNotificationDetails(),
+      payload: 'add_weigh_in',
     );
   }
 
@@ -78,6 +86,7 @@ class NotificationService {
       'Don\'t forget to record your weight for today.',
       _nextInstanceOfTime(hour, minute),
       _scheduledNotificationDetails(),
+      payload: 'add_weigh_in',
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
     );

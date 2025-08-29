@@ -71,11 +71,13 @@ class SettingsView extends StatelessWidget {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Center(
-                    child:
-                        Text("App icon made by Freepik from www.flaticon.com")),
+              const SafeArea(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Center(
+                      child: Text(
+                          "App icon made by Freepik from www.flaticon.com")),
+                ),
               ),
             ],
           ),
