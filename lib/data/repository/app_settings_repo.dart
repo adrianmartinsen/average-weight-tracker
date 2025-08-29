@@ -65,4 +65,14 @@ class AppSettingsRepo implements SettingsRepo {
       body: 'This is a test notification.',
     );
   }
+
+  @override
+  Future<bool> isNotificationPermissionGranted() {
+    return notificationService.isNotificationPermissionGranted();
+  }
+
+  @override
+  Future<bool> requestNotificationPermission() {
+    return notificationService.requestNotificationPermission();
+  }
 }

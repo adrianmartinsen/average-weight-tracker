@@ -16,4 +16,7 @@ abstract class SettingsRepo {
 
   // Shows a test notification.
   Future<void> showTestNotification();
+
+  Future<bool> isNotificationPermissionGranted();
+  Future<bool> requestNotificationPermission();
 }

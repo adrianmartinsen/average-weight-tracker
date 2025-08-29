@@ -14,7 +14,7 @@ class SettingsCubit extends Cubit<Settings> {
           const Settings(
             weightUnit: 'kg',
             remindersEnabled: false,
-            reminderTime: '20:00',
+            reminderTime: '07:00',
           ),
         ) {
     _subscription = _settingsRepo.settingsStream.listen((settings) {
@@ -40,6 +40,18 @@ class SettingsCubit extends Cubit<Settings> {
   }
 
   Future<void> setReminders({required bool enabled, String? time}) async {
+    if (enabled) {
+      final hasPermission =
+          await _settingsRepo.isNotificationPermissionGranted();
+      if (!hasPermission) {
+        final permissionGranted =
+            await _settingsRepo.requestNotificationPermission();
+        if (!permissionGranted) {
+          return; // User did not grant permission
+        }
+      }
+    }
+
     final newSettings = state.copyWith(
       remindersEnabled: enabled,
       reminderTime: time ?? state.reminderTime, // Only update time if provided
@@ -48,6 +60,14 @@ class SettingsCubit extends Cubit<Settings> {
   }
 
   Future<void> showTestNotification() async {
+    final hasPermission = await _settingsRepo.isNotificationPermissionGranted();
+    if (!hasPermission) {
+      final permissionGranted =
+          await _settingsRepo.requestNotificationPermission();
+      if (!permissionGranted) {
+        return; // User did not grant permission
+      }
+    }
     await _settingsRepo.showTestNotification();
   }
 

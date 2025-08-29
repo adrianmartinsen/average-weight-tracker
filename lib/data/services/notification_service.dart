@@ -1,9 +1,10 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:system_timezone/system_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationService {
-  final notificationsPlugin = FlutterLocalNotificationsPlugin();
+  final _notifications = FlutterLocalNotificationsPlugin();
 
   bool _isInitialized = false;
   bool get isInitialized => _isInitialized;
@@ -11,7 +12,7 @@ class NotificationService {
   Future<void> init() async {
     if (_isInitialized) return;
 
-    tz.initializeTimeZones();
+    _configureLocalTimeZone();
 
     const initSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -23,7 +24,7 @@ class NotificationService {
       iOS: initSettingsIOS,
     );
 
-    await notificationsPlugin.initialize(initSettings);
+    await _notifications.initialize(initSettings);
     _isInitialized = true;
   }
 
@@ -58,7 +59,7 @@ class NotificationService {
     required String title,
     required String body,
   }) async {
-    await notificationsPlugin.show(
+    await _notifications.show(
       id,
       title,
       body,
@@ -71,7 +72,7 @@ class NotificationService {
     final hour = int.parse(timeParts[0]);
     final minute = int.parse(timeParts[1]);
 
-    await notificationsPlugin.zonedSchedule(
+    await _notifications.zonedSchedule(
       0, // ID for this notification
       'Time to Weigh In!',
       'Don\'t forget to record your weight for today.',
@@ -83,7 +84,7 @@ class NotificationService {
   }
 
   Future<void> cancelAllNotifications() async {
-    await notificationsPlugin.cancelAll();
+    await _notifications.cancelAll();
   }
 
   tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
@@ -94,5 +95,51 @@ class NotificationService {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
     return scheduledDate;
+  }
+
+  _configureLocalTimeZone() {
+    tz.initializeTimeZones();
+    final String? timeZoneName = SystemTimezone.getTimezoneName();
+    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+  }
+
+  // Request notification permission (Android 13+)
+  Future<bool> requestNotificationPermission() async {
+    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+        _notifications.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+
+    if (androidImplementation != null) {
+      final bool? granted =
+          await androidImplementation.requestNotificationsPermission();
+      return granted ?? false;
+    }
+
+    // For iOS
+    final bool? result = await _notifications
+        .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+
+    return result ?? false;
+  }
+
+  // Check if notification permission is granted
+  Future<bool> isNotificationPermissionGranted() async {
+    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+        _notifications.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+
+    if (androidImplementation != null) {
+      final bool? granted =
+          await androidImplementation.areNotificationsEnabled();
+      return granted ?? false;
+    }
+
+    return true; // Assume granted for other platforms
   }
 }
