@@ -1,4 +1,4 @@
-package com.adrianmartinsen.average_weight_tracker
+package com.adrianmartinsen.bloc_weigh_in
 
 import io.flutter.embedding.android.FlutterActivity
 
