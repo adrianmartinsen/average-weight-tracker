@@ -99,18 +99,20 @@ Future<void> showAddOrEditCardDialog(BuildContext context,
     try {
       if (isEditing) {
         if (newPeriod != period) {
-          await cubit.updateCard(period!, newPeriod);
+          await cubit.updateCard(period, newPeriod);
         }
       } else {
         await cubit.addCard(newPeriod);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
     }
   }
 }

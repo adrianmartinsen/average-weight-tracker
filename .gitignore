@@ -14,3 +14,4 @@ pubspec.lock
 *.log
 todo.md
 *copy.dart
+*.jks
