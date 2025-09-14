@@ -1,7 +1,7 @@
 name: bloc_weigh_in
 description: "A new Flutter project."
 publish_to: "none"
-version: 0.1.4
+version: 1.0.0
 
 environment:
   sdk: ^3.5.1
