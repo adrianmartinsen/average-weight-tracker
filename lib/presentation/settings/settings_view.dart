@@ -57,17 +57,18 @@ class SettingsView extends StatelessWidget {
                           Text(_formatTime(context, settings.reminderTime)),
                       onTap: () => _selectTime(context, settings.reminderTime),
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.send_outlined),
-                      title: const Text('Send Test Notification'),
-                      onTap: () {
-                        context.read<SettingsCubit>().showTestNotification();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Test notification sent!')),
-                        );
-                      },
-                    ),
+                    // Uncomment code below to add Test Notification option
+                    // ListTile(
+                    //   leading: const Icon(Icons.send_outlined),
+                    //   title: const Text('Send Test Notification'),
+                    //   onTap: () {
+                    //     context.read<SettingsCubit>().showTestNotification();
+                    //     ScaffoldMessenger.of(context).showSnackBar(
+                    //       const SnackBar(
+                    //           content: Text('Test notification sent!')),
+                    //     );
+                    //   },
+                    // ),
                   ],
                 ),
               ),
