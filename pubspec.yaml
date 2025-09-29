@@ -1,5 +1,5 @@
 name: bloc_weigh_in
-description: "A new Flutter project."
+description: "A weight tracker app focused on average weight over time."
 publish_to: "none"
 version: 1.0.0
 
