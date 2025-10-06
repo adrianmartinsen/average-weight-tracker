@@ -12,6 +12,6 @@ pubspec.lock
 
 # Misc
 *.log
-todo.md
 *copy.dart
 *.jks
+ztodo.md

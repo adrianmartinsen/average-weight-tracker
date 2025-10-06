@@ -100,3 +100,12 @@ A last feature to consider is Health Connect. In my mind I just want the app to 
 1. Remove the test notification option - just comment out the code?
 2. Change the namespace from bloc_weighin to something more approprate
 3. Add the delete all function to the settings page? - leave this for actual production release
+
+---
+
+Upgrade to 16KB page size
+
+- the package system_timezone is not compatible with 16KB memory page size
+- last update to the package was 14 months ago - doesn't look like it's in development
+
+Try to replace system_timezone with flutter_timezone and timezone (already have the last one).

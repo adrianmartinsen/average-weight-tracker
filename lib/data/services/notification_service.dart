@@ -1,5 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:system_timezone/system_timezone.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -106,10 +106,12 @@ class NotificationService {
     return scheduledDate;
   }
 
-  _configureLocalTimeZone() {
+  _configureLocalTimeZone() async {
     tz.initializeTimeZones();
-    final String? timeZoneName = SystemTimezone.getTimezoneName();
-    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+    final TimezoneInfo currentTimeZone =
+        await FlutterTimezone.getLocalTimezone();
+
+    tz.setLocalLocation(tz.getLocation(currentTimeZone.identifier));
   }
 
   // Request notification permission (Android 13+)
