@@ -14,7 +14,7 @@ class NotificationService {
   }) async {
     if (_isInitialized) return;
 
-    _configureLocalTimeZone();
+    await _configureLocalTimeZone();
 
     const initSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -80,6 +80,9 @@ class NotificationService {
     final hour = int.parse(timeParts[0]);
     final minute = int.parse(timeParts[1]);
 
+    // Ensure we have permission for exact alarms on Android
+    await requestExactAlarmsPermission();
+
     await _notifications.zonedSchedule(
       0, // ID for this notification
       'Time to Weigh In!',
@@ -87,7 +90,7 @@ class NotificationService {
       _nextInstanceOfTime(hour, minute),
       _scheduledNotificationDetails(),
       payload: 'add_weigh_in',
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
     );
   }
@@ -112,6 +115,20 @@ class NotificationService {
         await FlutterTimezone.getLocalTimezone();
 
     tz.setLocalLocation(tz.getLocation(currentTimeZone.identifier));
+  }
+
+  // Request exact alarm permission (Android 12+)
+  Future<bool> requestExactAlarmsPermission() async {
+    final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+        _notifications.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+
+    if (androidImplementation != null) {
+      final bool? granted =
+          await androidImplementation.requestExactAlarmsPermission();
+      return granted ?? false;
+    }
+    return true; // Not required on other platforms
   }
 
   // Request notification permission (Android 13+)
