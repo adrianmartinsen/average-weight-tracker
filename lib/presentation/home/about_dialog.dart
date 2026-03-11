@@ -10,6 +10,11 @@ class AboutDialogWidget extends StatelessWidget {
     height: 40,
   );
 
+  final localPng = Image(
+    image: AssetImage('assets/images/default-orange.png'),
+    height: 40,
+  );
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -41,7 +46,7 @@ class AboutDialogWidget extends StatelessWidget {
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: coffeePng,
+              child: localPng,
             ),
           ),
         ],
