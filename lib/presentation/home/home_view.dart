@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/weighin_repo.dart';
 import '../average-weight/average_weight_page.dart';
 import '../settings/settings_view.dart';
+import 'about_dialog.dart';
 import 'add_weighin_modal.dart';
 import '../weighin/weighin_page.dart';
 
@@ -31,6 +32,10 @@ class _HomeScreenState extends State<HomeView> {
     );
   }
 
+  void _showDialog(BuildContext context) {
+    showDialog(context: context, builder: (context) => AboutDialogWidget());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +43,10 @@ class _HomeScreenState extends State<HomeView> {
         title: const Text("Average Weight Tracker"),
         centerTitle: true,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () => _showDialog(context),
+          ),
           IconButton(
             onPressed: () => Navigator.push(
                 context,
