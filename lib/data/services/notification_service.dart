@@ -27,7 +27,7 @@ class NotificationService {
     );
 
     await _notifications.initialize(
-      initSettings,
+      settings: initSettings,
       onDidReceiveNotificationResponse: (response) {
         onNotificationTapped?.call(response.payload);
       },
@@ -67,10 +67,10 @@ class NotificationService {
     required String body,
   }) async {
     await _notifications.show(
-      id,
-      title,
-      body,
-      _instantNotificationDetails(),
+      id: id,
+      title: title,
+      body: body,
+      notificationDetails: _instantNotificationDetails(),
       payload: 'add_weigh_in',
     );
   }
@@ -84,11 +84,11 @@ class NotificationService {
     await requestExactAlarmsPermission();
 
     await _notifications.zonedSchedule(
-      0, // ID for this notification
-      'Time to Weigh In!',
-      'Don\'t forget to record your weight for today.',
-      _nextInstanceOfTime(hour, minute),
-      _scheduledNotificationDetails(),
+      id: 0, // ID for this notification
+      title: 'Time to Weigh In!',
+      body: 'Don\'t forget to record your weight for today.',
+      scheduledDate: _nextInstanceOfTime(hour, minute),
+      notificationDetails: _scheduledNotificationDetails(),
       payload: 'add_weigh_in',
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
@@ -109,7 +109,7 @@ class NotificationService {
     return scheduledDate;
   }
 
-  _configureLocalTimeZone() async {
+  Future<void> _configureLocalTimeZone() async {
     tz.initializeTimeZones();
     final TimezoneInfo currentTimeZone =
         await FlutterTimezone.getLocalTimezone();
